@@ -1,0 +1,27 @@
+class Solution:
+    def combinationSum2(self, candidates: List[int], target: int) -> List[List[int]]:
+        candidates.sort()  # Sort to handle duplicates
+        ans = []
+        
+        def backtrack(index, target, curr):
+            if target == 0:
+                ans.append(curr[:])  # Found valid combination
+                return
+            if index == len(candidates) or target < 0:
+                return
+
+            # Include current element
+            curr.append(candidates[index])
+            backtrack(index + 1, target - candidates[index], curr)
+            curr.pop()
+
+            # Skip duplicates of current element when excluding it
+            next_index = index + 1
+            while next_index < len(candidates) and candidates[next_index] == candidates[index]:
+                next_index += 1
+            
+            # Exclude current element and move to next distinct number
+            backtrack(next_index, target, curr)
+
+        backtrack(0, target, [])
+        return ans
